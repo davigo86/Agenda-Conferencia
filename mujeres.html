@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Exclusivo - Mujeres</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: #c0cad0;
+            color: #c9d1d9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Botón para regresar a la agenda general */
+        .btn-regresar {
+            align-self: flex-start;
+            background-color: #20343d;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-regresar:hover {
+            background-color: #3a5663;
+        }
+
+        .header-banner-mujeres {
+            width: 100%;
+            max-width: 500px;
+            background-color: #7d5262; /* Tono vinotinto/terracota */
+            border-radius: 8px;
+            padding: 35px 20px;
+            margin-bottom: 25px;
+            text-align: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .header-banner-mujeres h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .contenedor-eventos {
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .evento {
+            background-color: #e4e7eb;
+            border: 1px solid #ccd1d9;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            box-sizing: border-box;
+            transition: all 0.4s ease;
+        }
+
+        .evento.tarjeta-en-vivo {
+            background-color: #ffffff;
+            border: 2px solid #7d5262; /* Borde a juego */
+            box-shadow: 0 0 15px rgba(125, 82, 98, 0.4);
+            transform: scale(1.02);
+        }
+
+        .hora {
+            font-size: 14px;
+            font-weight: bold;
+            color: #7d5262; /* Identificador de color */
+        }
+
+        .detalles h3 {
+            margin: 0 0 5px 0;
+            color: #20343d;
+            font-size: 18px;
+        }
+
+        .detalles p {
+            margin: 0;
+            font-size: 14px;
+            color: #55616d;
+        }
+
+        .estado-badge {
+            align-self: flex-start;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 2em;
+            background-color: #30363d;
+            color: #8b949e;
+        }
+
+        .estado-badge.proximo {
+            background-color: #ffffff;
+            color: #58a6ff;
+            border: 1px solid #d0d7de;
+        }
+
+        .estado-badge.en-vivo {
+            background-color: #7d5262;
+            color: #ffffff;
+            animation: pulso 2s infinite;
+        }
+
+        .estado-badge.finalizado {
+            background-color: rgba(240, 128, 128, 0.15);
+            color: #83231d;
+        }
+
+        @keyframes pulso {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="btn-regresar">⬅ Volver a la Agenda General</a>
+
+    <div class="header-banner-mujeres">
+        <h1>Foro Especial & Agenda<br>Exclusiva de Mujeres 2026</h1>
+    </div>
+
+    <div class="contenedor-eventos">
+        
+        <div class="evento" data-fecha="2026-06-29" data-inicio="09:00" data-fin="11:30">
+            <div class="hora">09:00 AM - 11:30 AM</div>
+            <div class="detalles">
+                <h3>Panel: Liderazgo y Desarrollo Front-End</h3>
+                <p>Espacio de debate y experiencias de mujeres en tecnología.</p>
+            </div>
+            <span class="estado-badge">Cargando...</span>
+        </div>
+
+        <div class="evento" data-fecha="2026-06-29" data-inicio="11:30" data-fin="13:00">
+            <div class="hora">11:30 AM - 01:00 PM</div>
+            <div class="detalles">
+                <h3>Workshop Especial: Prototipado y UI/UX</h3>
+                <p>Sesión práctica de diseño de interfaces interactivas.</p>
+            </div>
+            <span class="estado-badge">Cargando...</span>
+        </div>
+
+    </div>
+
+    <script>
+        function actualizarCronograma() {
+            const ahora = new Date();
+
+            document.querySelectorAll('.evento').forEach(evento => {
+                const fechaStr = evento.getAttribute('data-fecha');
+                const inicioStr = evento.getAttribute('data-inicio');
+                const finStr = evento.getAttribute('data-fin');
+
+                const horaInicio = new Date(`${fechaStr}T${inicioStr}:00`);
+                const horaFin = new Date(`${fechaStr}T${finStr}:00`);
+
+                const badge = evento.querySelector('.estado-badge');
+
+                if (ahora < horaInicio) {
+                    badge.textContent = "Próximamente";
+                    badge.className = "estado-badge proximo";
+                    evento.classList.remove('tarjeta-en-vivo'); 
+                } else if (ahora >= horaInicio && ahora <= horaFin) {
+                    badge.textContent = "En vivo";
+                    badge.className = "estado-badge en-vivo";
+                    evento.classList.add('tarjeta-en-vivo'); 
+                } else {
+                    badge.textContent = "Finalizado";
+                    badge.className = "estado-badge finalizado";
+                    evento.classList.remove('tarjeta-en-vivo'); 
+                }
+            });
+        }
+
+        setInterval(actualizarCronograma, 1000);
+        actualizarCronograma();
+    </script>
+</body>
+</html>
